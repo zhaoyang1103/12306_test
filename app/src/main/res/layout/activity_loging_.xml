@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/bt_intent_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="跳转到查询" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="用户名" />
+
+        <EditText
+            android:id="@+id/ed_username"
+
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:singleLine="true" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="密码" />
+
+        <EditText
+            android:id="@+id/ed_password"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+
+            android:singleLine="true" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/bt_resh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="刷新验证码" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/bt_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="登录" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/check_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="图一" />
+
+        <CheckBox
+            android:id="@+id/check_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="图二" />
+
+        <CheckBox
+            android:id="@+id/check_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="图三" />
+
+        <CheckBox
+            android:id="@+id/check_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="图四" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/check_5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="图五" />
+
+        <CheckBox
+            android:id="@+id/check_6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="图六" />
+
+        <CheckBox
+            android:id="@+id/check_7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="图七" />
+
+        <CheckBox
+            android:id="@+id/check_8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="图八" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center">
+
+
+        <ImageView
+            android:id="@+id/im_code"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+
+    </LinearLayout>
+
+
+</LinearLayout>
