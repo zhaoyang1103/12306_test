@@ -45,23 +45,23 @@ public class StringRequestHeader extends StringRequest {
         if (headers.keySet().contains("Set-Cookie")) {
             String cookie = headers.get("Set-Cookie");
             String cookie_1=headers.get("Set-Cookie");
-            String zhengre = "(\\w|\\=)+;";
+            String zhengre = "(\\w|\\=|\\.)+;";
             Pattern pattern = Pattern.compile(zhengre);
             Matcher matcher = pattern.matcher(cookie);
             String cookie_vlaues = "";
-            while (matcher.find()) {
+            if (matcher.find()) {
                 cookie_vlaues = matcher.group();
             }
-            String getkey = "^_\\w+\\_\\w+";
+            String getkey = "(\\w|\\_)+\\b";
             Pattern keypa = Pattern.compile(getkey);
             Matcher matcher1 = keypa.matcher(cookie_1);
             String cook_key = "";
 
-            while (matcher1.find()) {
+            if (matcher1.find()) {
                 cook_key = matcher1.group();
             }
             CookieUtil.saveKind_cookies(context, cook_key, cookie_vlaues);
-            i(cook_key, ">>>>>>>>cookie历史>>>>>>" + cookie_vlaues);
+            i(cook_key, ">>>>>>>>cookie储存历史>>>>>>" + cookie_vlaues);
         }
         return super.parseNetworkResponse(response);
 
@@ -73,17 +73,4 @@ public class StringRequestHeader extends StringRequest {
         return super.setRequestQueue(requestQueue);
     }
 
-//    @Override
-//    protected Map<String, String> getParams() throws AuthFailureError {
-////        i("StringRequestHeader", "请求头运行");
-////        Map<String, String> cookie = CookieUtil.getCookie(context);
-////        StringBuffer stringBuffer = new StringBuffer();
-////        for (String key_1 : cookie.keySet()) {
-////            stringBuffer.append(cookie.get(key_1));
-////            i(key_1, ">>>>>>>>cookie读取>>>>>>" + cookie.get(key_1));
-////        }
-////        i("StringRequestHeader", "" + stringBuffer);
-////        return cookie;
-//        return super.getParams();
-//    }
 }

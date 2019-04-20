@@ -9,7 +9,6 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -25,6 +24,7 @@ import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.a12306test.bean.GetImageUrl;
+import com.example.a12306test.bean.LoginBean_2;
 import com.example.a12306test.bean.Xy_Util;
 import com.example.a12306test.util.CookieUtil;
 import com.example.a12306test.util.JSonRequestHeader;
@@ -70,6 +70,9 @@ public class Loging_Activity extends AppCompatActivity implements View.OnClickLi
     private String first_page;
     private Bitmap bitmap;
     private static final String TAG = "Loging_Activity";
+    private String login_url = "";
+    private String login_url_2;
+    private String url_rail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,13 +102,14 @@ public class Loging_Activity extends AppCompatActivity implements View.OnClickLi
         xy_list.add(Xy_Util.getXy_8());
         requestQueue = Volley.newRequestQueue(Loging_Activity.this);
 //        getImage_url = "https://kyfw.12306.cn/passport/captcha/captcha-image64?login_site=E&module=login&rand=sjrand";
+        url_rail = "https://kyfw.12306.cn/otn/login/init";
         first_page = "https://www.12306.cn/index/";
-        get_image_json = "https://kyfw.12306.cn/passport/captcha/captcha-image64";
+        get_image_json = "https://kyfw.12306.cn/passport/captcha/captcha-image64?login_site=E&module=login&rand=sjrand";
         user_login_utl = "https://kyfw.12306.cn/otn/resources/login.html";
         image_change = "https://kyfw.12306.cn/passport/captcha/captcha-image?login_site=E&module=login&rand=sjrand";
 
-
-
+        login_url = "https://kyfw.12306.cn/passport/web/login";
+        login_url_2 = "https://kyfw.12306.cn/otn/login/loginAysnSuggest";
       /*  try {
             showImage();
         } catch (AuthFailureError authFailureError) {
@@ -136,7 +140,8 @@ public class Loging_Activity extends AppCompatActivity implements View.OnClickLi
         check_8.setOnClickListener(this);
         checkBoxes = new CheckBox[]{check_1, check_2, check_3, check_4, check_5, check_6, check_7, check_8};
 //        getLoginCookie();
-        getFirst_cookie();
+        getRail_url();
+
     }
 
     private Handler handler = new Handler() {
@@ -146,6 +151,42 @@ public class Loging_Activity extends AppCompatActivity implements View.OnClickLi
             super.handleMessage(msg);
         }
     };
+
+    private void getRail_url() {
+        final StringRequestHeader requestHeader = new StringRequestHeader(StringRequestHeader.Method.GET, url_rail, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                i("Loging_Activity", "查询首页记载成功");
+                getFirst_cookie();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+//                i("StringRequestHeader", "请求头运行");
+//                Map<String, String> cookie = CookieUtil.getCookie(Loging_Activity.this);
+//                StringBuffer stringBuffer = new StringBuffer();
+//                for (String key_1 : cookie.keySet()) {
+//                    stringBuffer.append(cookie.get(key_1));
+//                    i(key_1, ">>>>>>>>cookie读取>>>>>>" + cookie.get(key_1));
+//                }
+//                i("StringRequestHeader", "" + stringBuffer);
+//                Map<String,String> fincookie=new HashMap<>();
+//                fincookie.put("Cookie",stringBuffer.toString());
+                Map<String, String> stringStringMap = sendHeader();
+                stringStringMap.put("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apn\n" +
+                        "g,*/*;q=0.8,application/signed-exchange;v=b3");
+                return stringStringMap;
+
+            }
+        };
+
+        requestQueue.add(requestHeader);
+    }
 
     private void getFirst_cookie() {
         final StringRequestHeader requestHeader = new StringRequestHeader(StringRequestHeader.Method.GET, first_page, new Response.Listener<String>() {
@@ -172,7 +213,10 @@ public class Loging_Activity extends AppCompatActivity implements View.OnClickLi
 //                i("StringRequestHeader", "" + stringBuffer);
 //                Map<String,String> fincookie=new HashMap<>();
 //                fincookie.put("Cookie",stringBuffer.toString());
-                return sendHeader();
+                Map<String, String> stringStringMap = sendHeader();
+                stringStringMap.put("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apn\n" +
+                        "g,*/*;q=0.8,application/signed-exchange;v=b3");
+                return stringStringMap;
 
             }
         };
@@ -219,7 +263,7 @@ public class Loging_Activity extends AppCompatActivity implements View.OnClickLi
         StringBuffer stringBuffer = new StringBuffer();
         for (String key_1 : cookie.keySet()) {
             stringBuffer.append(cookie.get(key_1));
-            i(key_1, ">>>>>>>>cookie读取>>>>>>" + cookie.get(key_1));
+            i(key_1, ">>>>>>>>cookie一条一条读取>>>>>>" + cookie.get(key_1));
         }
         i("StringRequestHeader", "" + stringBuffer);
         Map<String, String> fincookie = new HashMap<>();
@@ -238,12 +282,11 @@ public class Loging_Activity extends AppCompatActivity implements View.OnClickLi
                 i("\"最终数据显示\"", "终点" + getImageUrl.getImage().length() + ">>" + getImageUrl.getImage());
                 i("我是图片", "终点" + getImageUrl.getImage().length() + ">>" + getImageUrl.getImage().length());
 
-
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-
+                Toast.makeText(Loging_Activity.this, "验证码获取失败", Toast.LENGTH_SHORT).show();
             }
         }) {
             @Override
@@ -252,7 +295,6 @@ public class Loging_Activity extends AppCompatActivity implements View.OnClickLi
             }
         };
         requestQueue.add(jSonRequestHeader);
-
 
     }
 
@@ -273,7 +315,7 @@ public class Loging_Activity extends AppCompatActivity implements View.OnClickLi
         }, 0, 0, Bitmap.Config.ARGB_8888, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                Log.i(TAG, "onErrorResponse: " + volleyError);
+                i(TAG, "onErrorResponse: " + volleyError);
 
                 Toast.makeText(Loging_Activity.this, "" + volleyError.toString(), Toast.LENGTH_SHORT).show();
             }
@@ -323,6 +365,74 @@ public class Loging_Activity extends AppCompatActivity implements View.OnClickLi
                 break;
         }
     }
+
+    private void login_method() {
+        StringBuffer stringBuffer_xy = new StringBuffer();
+
+        for (int i = 0; i < checkBoxes.length; i++) {
+            if (checkBoxes[i].isChecked()) {
+                stringBuffer_xy.append(xy_list.get(i) + ",");
+            }
+        }
+
+        String xy_zhenfgze = "(\\w|,)+\\b";
+        Pattern compile = Pattern.compile(xy_zhenfgze);
+        Matcher matcher = compile.matcher(stringBuffer_xy);
+        String reslut_xy = "";
+        while (matcher.find()) {
+            reslut_xy = matcher.group();
+            System.out.println(reslut_xy);
+        }
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("username", ed_username.getText().toString());
+            jsonObject.put("password:", ed_password.getText().toString());
+            jsonObject.put("appid", "otn");
+            jsonObject.put("answer", stringBuffer_xy);
+//            jsonObject.put("loginUserDTO.user_name", ed_username.getText().toString());
+//            jsonObject.put("userDTO.password:", ed_password.getText().toString());
+//            jsonObject.put("randCode", 4);
+//            jsonObject.put("answer", stringBuffer_xy);
+
+//            equest.requestbody = loginUserDTO.user_name = xxxxxxx
+//                    & userDTO.password = xxxxxxxx
+//                    & randCode = 193 % 2 C118 % 2 C179 % 2 C48
+            JSonRequestHeader jSonRequestHeader = new JSonRequestHeader(JSonRequestHeader.Method.POST, login_url_2, jsonObject, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject jsonObject) {
+                    Gson gson = new Gson();
+                    LoginBean_2 getImageUrl = gson.fromJson(jsonObject.toString(), LoginBean_2.class);
+                    i("Loging_Activity登录响应", "" + getImageUrl.getData().getMessage());
+                    Toast.makeText(Loging_Activity.this, getImageUrl.getData().getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError volleyError) {
+                    Toast.makeText(Loging_Activity.this, "登录方法有问题" + volleyError.toString(), Toast.LENGTH_SHORT).show();
+                    i("Loging_Activity", "" + volleyError.toString());
+                }
+            }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> stringStringMap = sendHeader();
+//                    stringStringMap.put("RAIL_DEVICEID", "ZkL-E6B5P3dQ_86nwApfQThzMHHLqLItV906_TeUPB2Amqqp9lXBbnK-RXVOjYK9EKmLVQGg1neHjVXK9-cIEFXQwR6mvV_aQtjH2R482ktyrKY6ilzAkT-97xkAQFuUSqgM1f1WaStSxhNYkSQO7_4O6B95htZs");
+
+//                    stringStringMap.put("Content-Type", "x-www-form-urlencoded;charset=UTF-8");
+//                    stringStringMap.put("Origin", "https://kyfw.12306.cn");
+//                    Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+//                    stringStringMap.put("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apn\n" +
+//                            "g,*/*;q=0.8,application/signed-exchange;v=b3");
+                    return stringStringMap;
+                }
+            };
+            requestQueue.add(jSonRequestHeader);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
 
     //
     private void submit() {
@@ -404,7 +514,13 @@ public class Loging_Activity extends AppCompatActivity implements View.OnClickLi
                 try {
                     String result_message = jsonObject.getString("result_message");
                     int arocde = jsonObject.getInt("result_code");
-                    Toast.makeText(Loging_Activity.this, "" + result_message + "?????", Toast.LENGTH_SHORT).show();
+
+                    if (arocde == 4) {
+                        login_method();
+                    } else {
+                        Toast.makeText(Loging_Activity.this, "登录失败", Toast.LENGTH_SHORT).show();
+                    }
+                    Toast.makeText(Loging_Activity.this, "" + result_message, Toast.LENGTH_SHORT).show();
 //                    Toast.makeText(Loging_Activity.this, "" + arocde, Toast.LENGTH_SHORT).show();
 
                 } catch (JSONException e) {
@@ -425,6 +541,8 @@ public class Loging_Activity extends AppCompatActivity implements View.OnClickLi
         requestQueue.add(jsonObjectRequest);
 
     }
+
+
 //
 //
 //    private void getLoginCookie() {

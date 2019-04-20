@@ -14,6 +14,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -21,11 +22,14 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.a12306test.bean.Query_TacketBean;
 import com.example.a12306test.station_pack.Station_Util;
+import com.example.a12306test.util.CookieUtil;
+import com.example.a12306test.util.JSonRequestHeader;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -128,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        String url1 = "https://kyfw.12306.cn/otn/leftTicket/query?leftTicketDTO.train_date=2019-04-16&leftTicketDTO.from_station=GZQ&leftTicketDTO.to_station=TJP&purpose_codes=ADULT";
 //
 //        String url_2 = "https://kyfw.12306.cn/otn/leftTicket/query?leftTicketDTO.train_date=2019-04-19&leftTicketDTO.from_station=BJP&leftTicketDTO.to_station=TYV&purpose_codes=ADULT";
-        JsonObjectRequest request = new JsonObjectRequest(JsonObjectRequest.Method.GET, url, new Response.Listener<JSONObject>() {
+        JSonRequestHeader request = new JSonRequestHeader(JsonObjectRequest.Method.GET, url, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 Gson gson = new Gson();
@@ -159,8 +163,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onErrorResponse(VolleyError volleyError) {
                 Toast.makeText(MainActivity.this, "" + volleyError.toString(), Toast.LENGTH_SHORT).show();
             }
-        });
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                return sendHeader();
+            }
+        };
         requestQueue.add(request);
+    }
+
+    private Map<String, String> sendHeader() {
+        i("StringRequestHeader", "请求头运行");
+        Map<String, String> cookie = CookieUtil.getCookie(MainActivity.this);
+        StringBuffer stringBuffer = new StringBuffer();
+        for (String key_1 : cookie.keySet()) {
+            stringBuffer.append(cookie.get(key_1));
+            i(key_1, ">>>>>>>>cookie读取>>>>>>" + cookie.get(key_1));
+        }
+        i("StringRequestHeader", "" + stringBuffer);
+        Map<String, String> fincookie = new HashMap<>();
+        fincookie.put("Cookie", stringBuffer.toString());
+        return fincookie;
     }
 
     class Ticket_Aadpter extends BaseAdapter {

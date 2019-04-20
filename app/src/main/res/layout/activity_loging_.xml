@@ -50,7 +50,7 @@
             android:id="@+id/ed_password"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-
+            android:inputType="textPassword"
             android:singleLine="true" />
     </LinearLayout>
 

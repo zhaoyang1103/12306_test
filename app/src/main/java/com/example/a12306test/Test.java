@@ -8,9 +8,10 @@ import java.util.regex.Pattern;
  */
 public class Test {
     public static void main(String[] args) {
-        String test = "46,36,249,113,";
-        String xy_zhenfgze="(\\w|,)+\\b";
-        Pattern compile = Pattern.compile(xy_zhenfgze);
+        String test = "passpo545=2417638b395d4f239efb495808235a99t5467; Path=/passport";
+        String xy_zhenfgze="(\\w|\\_)+\\b";
+        String zhengre = "(\\w|\\=)+;";
+        Pattern compile = Pattern.compile(zhengre);
         Matcher matcher = compile.matcher(test);
         while (matcher.find())
         {
